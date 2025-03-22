@@ -2,30 +2,65 @@
 {% block content %}
 <div class="flex flex-col h-screen">
     <!-- Top Navigation Bar -->
-    <nav class="bg-slate-900 text-white p-4">
-        <ul class="flex space-x-4">
-            <li><a href="{% url 'home' %}" class="hover:underline">Home</a></li>
-        </ul>
+    <nav class="bg-slate-900 text-white p-4 fixed w-full z-10 shadow-md">
+        <div class="flex justify-between items-center">
+            <ul class="flex space-x-4">
+                <li class="font-bold text-lg">Course Dashboard</li>
+            </ul>
+            <button class="bg-slate-700 hover:bg-slate-600 transition-all text-white px-4 py-2 cursor-pointer rounded">
+                Logout
+            </button>
+        </div>
     </nav>
 
-    <div class="flex flex-1">
+    <div class="flex flex-1 pt-16">
         <!-- Sidebar -->
-        <aside class="w-64 bg-slate-900 text-white p-4 border-r">
+        <aside class="w-64 bg-slate-900 text-white px-4 py-6 border-r overflow-y-auto">
             <div>
-                <h2 class="text-lg font-semibold mb-2">List</h2>
-                <ul class="space-y-2">
-                    <li><a href="{% url 'teachers_list' %}" class="block p-2 hover:bg-slate-800">Teachers</a></li>
-                    <li><a href="{% url 'schedules_list' %}" class="block p-2 hover:bg-slate-800">Schedules</a></li>
-                    <li><a href="{% url 'courses_list' %}" class="block p-2 hover:bg-slate-800">Courses</a></li>
+                <h2 class="text-lg px-1 text-slate-200 font-semibold mb-2">List</h2>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="{% url 'teacher-list' %}"
+                            class="block p-2 {% if request.resolver_match.url_name == 'teacher-list' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            Teachers
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'teacher-list' %}"
+                            class="block p-2 {% if request.resolver_match.url_name == 'schedule-list' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            Schedules
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'teacher-list' %}"
+                            class="block p-2 {% if request.resolver_match.url_name == 'course-list' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            Courses
+                        </a>
+                    </li>
                 </ul>
             </div>
             <hr class="my-4 border-gray-700">
             <div>
-                <h2 class="text-lg font-semibold mb-2">Editor</h2>
-                <ul class="space-y-2">
-                    <li><a href="{% url 'teachers_editor' %}" class="block p-2 hover:bg-slate-800">Manage Teachers</a></li>
-                    <li><a href="{% url 'schedules_editor' %}" class="block p-2 hover:bg-slate-800">Manage Schedules</a></li>
-                    <li><a href="{% url 'courses_editor' %}" class="block p-2 hover:bg-slate-800">Manage Courses</a></li>
+                <h2 class="text-lg px-1 text-slate-200 font-semibold mb-2">Editor</h2>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="{% url 'teacher-list' %}"
+                            class="block p-2 {% if request.resolver_match.url_name == 'manage-teachers' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            Manage Teachers
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'teacher-list' %}"
+                            class="block p-2 {% if request.resolver_match.url_name == 'manage-schedules' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            Manage Schedules
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'teacher-list' %}"
+                            class="block p-2 {% if request.resolver_match.url_name == 'manage-courses' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            Manage Courses
+                        </a>
+                    </li>
                 </ul>
             </div>
         </aside>

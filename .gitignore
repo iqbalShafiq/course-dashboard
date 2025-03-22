@@ -2,3 +2,8 @@ node_modules
 .venv
 *.env
 .sqlite3
+*.pyc
+**/__pycache__/
+*.log
+static/output.css
+**/migrations/

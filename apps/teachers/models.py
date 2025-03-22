@@ -1,8 +1,22 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
+from core.models import BaseModel
 
 
-class Teacher(models.Model):
+ROLE_CHOICES = (
+    ("user", "User"),
+    ("manager", "Manager"),
+)
+
+
+class TeacherSetting(BaseModel):
+    actor = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=120, choices=ROLE_CHOICES, default="user")
+
+
+class Teacher(BaseModel):
+    actor = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(_("Full Name"), max_length=100)
     email = models.EmailField(_("Email Address"), unique=True)
     phone = models.CharField(_("Phone Number"), max_length=15, blank=True, null=True)
