@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="flex flex-col h-screen">
+    <!-- Top Navigation Bar -->
+    <nav class="bg-slate-900 text-white p-4">
+        <ul class="flex space-x-4">
+            <li><a href="{% url 'home' %}" class="hover:underline">Home</a></li>
+        </ul>
+    </nav>
+
+    <div class="flex flex-1">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-900 text-white p-4 border-r">
+            <div>
+                <h2 class="text-lg font-semibold mb-2">List</h2>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'teachers_list' %}" class="block p-2 hover:bg-slate-800">Teachers</a></li>
+                    <li><a href="{% url 'schedules_list' %}" class="block p-2 hover:bg-slate-800">Schedules</a></li>
+                    <li><a href="{% url 'courses_list' %}" class="block p-2 hover:bg-slate-800">Courses</a></li>
+                </ul>
+            </div>
+            <hr class="my-4 border-gray-700">
+            <div>
+                <h2 class="text-lg font-semibold mb-2">Editor</h2>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'teachers_editor' %}" class="block p-2 hover:bg-slate-800">Manage Teachers</a></li>
+                    <li><a href="{% url 'schedules_editor' %}" class="block p-2 hover:bg-slate-800">Manage Schedules</a></li>
+                    <li><a href="{% url 'courses_editor' %}" class="block p-2 hover:bg-slate-800">Manage Courses</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 bg-white">
+            {% block dashboard_content %}
+            <!-- Extendable content goes here -->
+            {% endblock dashboard_content %}
+        </main>
+    </div>
+</div>
+{% endblock content %}
