@@ -28,15 +28,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'teacher-list' %}"
-                            class="block p-2 {% if request.resolver_match.url_name == 'schedule-list' %}font-bold{% else %}hover:font-bold{% endif %}">
-                            Schedules
+                        <a href="{% url 'course-list' %}"
+                            class="block p-2 {% if request.resolver_match.url_name == 'course-list' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            Courses
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'teacher-list' %}"
-                            class="block p-2 {% if request.resolver_match.url_name == 'course-list' %}font-bold{% else %}hover:font-bold{% endif %}">
-                            Courses
+                            class="block p-2 {% if request.resolver_match.url_name == 'schedule-list' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            Schedules
                         </a>
                     </li>
                 </ul>
@@ -47,14 +47,14 @@
                 <ul class="space-y-1">
                     <li>
                         <a href="{% url 'teacher-list' %}"
-                            class="block p-2 {% if request.resolver_match.url_name == 'manage-schedules' %}font-bold{% else %}hover:font-bold{% endif %}">
-                            Manage Schedules
+                            class="block p-2 {% if request.resolver_match.url_name == 'manage-courses' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            Manage Courses
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'teacher-list' %}"
-                            class="block p-2 {% if request.resolver_match.url_name == 'manage-courses' %}font-bold{% else %}hover:font-bold{% endif %}">
-                            Manage Courses
+                            class="block p-2 {% if request.resolver_match.url_name == 'manage-schedules' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            Manage Schedules
                         </a>
                     </li>
                 </ul>
