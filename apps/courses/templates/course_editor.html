@@ -1,0 +1,39 @@
+{% extends "dashboard_base.html" %}
+
+{% block dashboard_content %}
+<div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold mb-4 text-slate-900">
+        {% if object %}Edit Course{% else %}Create Course{% endif %}
+    </h1>
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div>
+            <label for="id_name" class="block text-slate-900 font-semibold mb-1">Course Name</label>
+            {{ form.name }}
+            {{ form.name.errors }}
+        </div>
+        <div>
+            <label for="id_description" class="block text-slate-900 font-semibold mb-1">Description</label>
+            {{ form.description }}
+            {{ form.description.errors }}
+        </div>
+        <div>
+            <label for="id_capacity" class="block text-slate-900 font-semibold mb-1">Capacity</label>
+            {{ form.capacity }}
+            {{ form.capacity.errors }}
+        </div>
+        <div>
+            {{ form.is_active }}
+            {{ form.is_active.errors }}
+            <label for="id_is_active" class="text-slate-900 font-semibold ml-1">Active Status</label>
+        </div>
+        <div>
+            <button type="submit" class="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded">
+                {% if object %}Save Changes{% else %}Create Course{% endif %}
+            </button>
+            <a href="{% url 'course-list' %}" class="ml-4 text-slate-900 hover:underline">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock dashboard_content %}

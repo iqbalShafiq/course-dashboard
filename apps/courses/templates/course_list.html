@@ -13,16 +13,26 @@
     <!-- Courses Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for course in courses %}
-        <div class="bg-white border border-slate-900 rounded shadow-md p-4 hover:shadow-lg transition-shadow"
+        <div class="bg-white border border-slate-900 rounded shadow-md p-4 hover:shadow-lg transition-shadow flex flex-col justify-between"
              x-show="isVisible('{{ course.name }}', '{{ course.description }}')">
-            <h2 class="text-lg font-bold text-slate-900 mb-2">{{ course.name }}</h2>
-            <p class="text-slate-700 mb-4">{{ course.description|truncatewords:20 }}</p>
-            <div class="flex justify-between items-center">
+            <div>
+                <h2 class="text-lg font-bold text-slate-900 mb-2">{{ course.name }}</h2>
+                <p class="text-slate-700 mb-4 line-clamp-3" style="min-height: 1.5rem;">
+                    {{ course.description|truncatewords:20 }}
+                </p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
                 <span class="text-sm text-slate-500">Capacity: {{ course.capacity }}</span>
-                <a href="" 
-                   class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded text-sm">
-                    View Details
-                </a>
+                <div class="flex space-x-2">
+                    <a href="{% url 'course-detail' course.id %}" 
+                       class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded text-sm">
+                        View Details
+                    </a>
+                    <a href="{% url 'course-edit' course.id %}" 
+                       class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded text-sm">
+                        Edit
+                    </a>
+                </div>
             </div>
         </div>
         {% endfor %}
