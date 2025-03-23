@@ -6,8 +6,8 @@
 
     <!-- Search and Filter -->
     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
-        <input type="text" x-model="searchTerm" placeholder="Search by name or email..." 
-               class="border border-slate-900 rounded p-2 w-full sm:w-1/3">
+        <input type="text" x-model="searchTerm" placeholder="Search by name or email..."
+            class="border border-slate-900 rounded p-2 w-full sm:w-1/3">
         <select x-model="statusFilter" class="border border-slate-900 rounded p-2 w-full sm:w-auto">
             <option value="">All</option>
             <option value="active">Active</option>
@@ -24,19 +24,27 @@
                     <th class="border border-slate-900 px-4 py-2">Email</th>
                     <th class="border border-slate-900 px-4 py-2">Phone</th>
                     <th class="border border-slate-900 px-4 py-2">Specialization</th>
-                    <th class="border border-slate-900 px-4 py-2">Status</th>
+                    {% if user_settings and user_settings.role == "manager" %}
+                    <th class="border border-slate-900 px-4 py-2">Action</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
                 {% for teacher in teachers %}
-                <tr class="hover:bg-slate-100" x-show="isVisible('{{ teacher.name }}', '{{ teacher.email }}', '{{ teacher.is_active|yesno:'Active,Inactive' }}')">
+                <tr class="hover:bg-slate-100"
+                    x-show="isVisible('{{ teacher.name }}', '{{ teacher.email }}', '{{ teacher.is_active|yesno:'Active,Inactive' }}')">
                     <td class="border border-slate-900 px-4 py-2">{{ teacher.name }}</td>
                     <td class="border border-slate-900 px-4 py-2">{{ teacher.email }}</td>
                     <td class="border border-slate-900 px-4 py-2">{{ teacher.phone|default:"-" }}</td>
                     <td class="border border-slate-900 px-4 py-2">{{ teacher.specialization }}</td>
-                    <td class="border border-slate-900 px-4 py-2">
-                        {{ teacher.is_active|yesno:"Active,Inactive" }}
+                    {% if user_settings and user_settings.role == "manager" %}
+                    <td class="border border-slate-900 px-4 py-2 text-center">
+                        <a href="{% url 'teacher-edit' teacher.id %}"
+                            class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded">
+                            Edit
+                        </a>
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
@@ -50,14 +58,14 @@
         return {
             searchTerm: '',
             statusFilter: '',
-            
+
             isVisible(name, email, status) {
                 const nameMatch = name.toLowerCase().includes(this.searchTerm.toLowerCase());
                 const emailMatch = email.toLowerCase().includes(this.searchTerm.toLowerCase());
                 const searchMatch = nameMatch || emailMatch;
-                
+
                 const statusMatch = !this.statusFilter || status.toLowerCase() === this.statusFilter.toLowerCase();
-                
+
                 return searchMatch && statusMatch;
             }
         }

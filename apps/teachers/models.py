@@ -22,8 +22,6 @@ class Teacher(BaseModel):
     phone = models.CharField(_("Phone Number"), max_length=15, blank=True, null=True)
     specialization = models.CharField(_("Specialization"), max_length=100)
     is_active = models.BooleanField(_("Active Status"), default=True)
-    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
-    updated_at = models.DateTimeField(_("Updated At"), auto_now=True)
 
     class Meta:
         verbose_name = _("Teacher")

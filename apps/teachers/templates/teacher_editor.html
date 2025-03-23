@@ -1,0 +1,27 @@
+{% extends "dashboard_base.html" %}
+
+{% block dashboard_content %}
+<div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold mb-4 text-slate-900">Edit Teacher</h1>
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div>
+            <label for="id_name" class="block text-slate-900 font-semibold mb-1">Name</label>
+            {{ form.name }}
+            {{ form.name.errors }}
+        </div>
+        <div>
+            <label for="id_specialization" class="block text-slate-900 font-semibold mb-1">Specialization</label>
+            {{ form.specialization }}
+            {{ form.specialization.errors }}
+        </div>
+        <div>
+            <button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded">
+                Save Changes
+            </button>
+            <a href="{% url 'teacher-list' %}" class="ml-4 text-slate-900 hover:underline">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock dashboard_content %}
