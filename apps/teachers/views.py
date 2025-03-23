@@ -18,7 +18,7 @@ class TeacherListView(LoginRequiredMixinView, ListView):
         user_settings = TeacherSetting.objects.filter(actor=self.request.user).first()
 
         context["teachers"] = teachers
-        context["user_settings"] = user_settings 
+        context["user_settings"] = user_settings
         return context
 
 
@@ -28,4 +28,4 @@ class TeacherEditView(LoginRequiredMixinView, UpdateView):
     template_name = "teacher_editor.html"
 
     def get_success_url(self):
-        return reverse_lazy('teacher-list')
+        return reverse_lazy("teacher-list")

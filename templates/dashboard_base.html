@@ -61,7 +61,7 @@
                 </button>
                 <ul x-show="openSchedule" class="ml-4 space-y-1">
                     <li>
-                        <a href=""
+                        <a href="{% url 'schedule-list' %}"
                             class="block p-2 {% if request.resolver_match.url_name == 'schedule-list' %}font-bold{% else %}hover:font-bold{% endif %}">
                             List
                         </a>
