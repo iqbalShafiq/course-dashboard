@@ -1,72 +1,97 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="flex flex-col h-screen">
-    <!-- Top Navigation Bar -->
-    <nav class="bg-slate-900 text-white p-4 fixed w-full z-10 shadow-md">
-        <div class="flex justify-between items-center">
-            <ul class="flex space-x-4">
-                <li class="font-bold text-lg">Course Dashboard</li>
-            </ul>
-            <button class="bg-slate-700 hover:bg-slate-600 transition-all text-white px-4 py-2 cursor-pointer rounded">
-                <a href="{% url 'logout' %}">
-                    Logout
-                </a>
-            </button>
+<div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-900 text-white px-4 py-6 border-r overflow-y-auto">
+        <!-- Branding -->
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-white">Course Dashboard</h1>
+            <p class="text-sm text-slate-400">Manage your courses efficiently</p>
         </div>
-    </nav>
 
-    <div class="flex flex-1 pt-16">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-slate-900 text-white px-4 py-6 border-r overflow-y-auto">
+        <!-- Navigation -->
+        <div x-data="{ 
+            openCourse: {% if request.resolver_match.url_name == 'course-list' or request.resolver_match.url_name == 'create-courses' %}true{% else %}false{% endif %}, 
+            openTeacher: {% if request.resolver_match.url_name == 'teacher-list' %}true{% else %}false{% endif %}, 
+            openSchedule: {% if request.resolver_match.url_name == 'schedule-list' or request.resolver_match.url_name == 'manage-schedule' %}true{% else %}false{% endif %} 
+        }">
+            <!-- Courses Dropdown -->
             <div>
-                <h2 class="text-lg px-1 text-slate-200 font-semibold mb-2">List</h2>
-                <ul class="space-y-1">
-                    <li>
-                        <a href="{% url 'teacher-list' %}"
-                            class="block p-2 {% if request.resolver_match.url_name == 'teacher-list' %}font-bold{% else %}hover:font-bold{% endif %}">
-                            Teachers
-                        </a>
-                    </li>
+                <button @click="openCourse = !openCourse"
+                    class="w-full text-left p-2 font-semibold hover:bg-slate-800 rounded">
+                    Courses
+                </button>
+                <ul x-show="openCourse" class="ml-4 space-y-1">
                     <li>
                         <a href="{% url 'course-list' %}"
                             class="block p-2 {% if request.resolver_match.url_name == 'course-list' %}font-bold{% else %}hover:font-bold{% endif %}">
-                            Courses
+                            List
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'teacher-list' %}"
-                            class="block p-2 {% if request.resolver_match.url_name == 'schedule-list' %}font-bold{% else %}hover:font-bold{% endif %}">
-                            Schedules
+                        <a href="{% url 'create-courses' %}"
+                            class="block p-2 {% if request.resolver_match.url_name == 'create-courses' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            Create
                         </a>
                     </li>
                 </ul>
             </div>
-            <hr class="my-4 border-gray-700">
-            <div>
-                <h2 class="text-lg px-1 text-slate-200 font-semibold mb-2">Editor</h2>
-                <ul class="space-y-1">
-                    <li>
-                        <a href="{% url 'teacher-list' %}"
-                            class="block p-2 {% if request.resolver_match.url_name == 'manage-courses' %}font-bold{% else %}hover:font-bold{% endif %}">
-                            Manage Courses
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'teacher-list' %}"
-                            class="block p-2 {% if request.resolver_match.url_name == 'manage-schedules' %}font-bold{% else %}hover:font-bold{% endif %}">
-                            Manage Schedules
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 p-6 bg-white">
-            {% block dashboard_content %}
-            <!-- Extendable content goes here -->
-            {% endblock dashboard_content %}
-        </main>
-    </div>
+            <!-- Teachers Dropdown -->
+            <div>
+                <button @click="openTeacher = !openTeacher"
+                    class="w-full text-left p-2 font-semibold hover:bg-slate-800 rounded">
+                    Teachers
+                </button>
+                <ul x-show="openTeacher" class="ml-4 space-y-1">
+                    <li>
+                        <a href="{% url 'teacher-list' %}"
+                            class="block p-2 {% if request.resolver_match.url_name == 'teacher-list' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            List
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Schedules Dropdown -->
+            <div>
+                <button @click="openSchedule = !openSchedule"
+                    class="w-full text-left p-2 font-semibold hover:bg-slate-800 rounded">
+                    Schedules
+                </button>
+                <ul x-show="openSchedule" class="ml-4 space-y-1">
+                    <li>
+                        <a href=""
+                            class="block p-2 {% if request.resolver_match.url_name == 'schedule-list' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            List
+                        </a>
+                    </li>
+                    <li>
+                        <a href=""
+                            class="block p-2 {% if request.resolver_match.url_name == 'manage-schedules' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            Manage
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Logout -->
+            <div class="mt-4">
+                <a href="{% url 'logout' %}"
+                    class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded w-full block text-left">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 bg-gray-50">
+        {% block dashboard_content %}
+        <!-- Extendable content goes here -->
+        {% endblock dashboard_content %}
+    </main>
 </div>
+
+<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 {% endblock content %}
