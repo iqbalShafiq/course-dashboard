@@ -4,6 +4,7 @@ from django.views.generic.edit import UpdateView, CreateView
 from django.urls import reverse_lazy
 from apps.courses.models import Course
 from apps.courses.forms import CourseEditForm
+from apps.teachers.models import TeacherSetting
 from core.views import LoginRequiredMixinView
 from django.views import View
 from django.http import JsonResponse
@@ -17,12 +18,22 @@ class CourseListView(LoginRequiredMixinView, ListView):
 
     def get_queryset(self):
         return Course.objects.filter(is_active=True)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user_settings"] = TeacherSetting.objects.filter(actor=self.request.user).first()
+        return context
 
 
 class CourseDetailView(LoginRequiredMixinView, DetailView):
     model = Course
     template_name = "course_detail.html"
     context_object_name = "course"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user_settings"] = TeacherSetting.objects.filter(actor=self.request.user).first()
+        return context
 
     def post(self, request, *args, **kwargs):
         action = request.POST.get('action')

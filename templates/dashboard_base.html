@@ -28,12 +28,14 @@
                             List
                         </a>
                     </li>
+                    {% if user_settings and user_settings.role == 'manager' %}
                     <li>
                         <a href="{% url 'create-courses' %}"
                             class="block p-2 {% if request.resolver_match.url_name == 'create-courses' %}font-bold{% else %}hover:font-bold{% endif %}">
                             Create
                         </a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
 

@@ -39,7 +39,7 @@
         <p class="text-slate-700">No schedules available for this course.</p>
         {% if course.is_task_running %}
         <div class="mt-6">
-            <p class="text-blue-600">Mapping schedules... Please wait.</p>
+            <p class="text-blue-600">Assigning schedules... Please wait.</p>
         </div>
         <script>
             function checkTaskStatus() {
@@ -54,16 +54,18 @@
             setInterval(checkTaskStatus, 5000); // Poll every 5 seconds
         </script>
         {% else %}
+        {% if user_settings and user_settings.role == 'manager' %}
         <div class="mt-6">
             <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="process">
                 <button type="submit" 
                         class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-3 rounded text-sm">
-                    Map Schedule
+                    Assign Schedule
                 </button>
             </form>
         </div>
+        {% endif %}
         {% endif %}
         {% endif %}
     </div>
