@@ -1,10 +1,13 @@
+from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, CreateView
 from django.urls import reverse_lazy
 from apps.courses.models import Course
 from apps.courses.forms import CourseEditForm
 from core.views import LoginRequiredMixinView
-from django.shortcuts import render
+from django.views import View
+from django.http import JsonResponse
+from apps.courses.tasks import assign_schedules
 
 
 class CourseListView(LoginRequiredMixinView, ListView):
@@ -21,6 +24,14 @@ class CourseDetailView(LoginRequiredMixinView, DetailView):
     template_name = "course_detail.html"
     context_object_name = "course"
 
+    def post(self, request, *args, **kwargs):
+        action = request.POST.get('action')
+        course = self.get_object()
+
+        if action == 'process' and not course.is_task_running():
+            assign_schedules(course.id)
+
+        return redirect('course-detail', pk=course.id)
 
 class CourseEditView(LoginRequiredMixinView, UpdateView):
     model = Course
@@ -38,3 +49,9 @@ class CourseCreateView(LoginRequiredMixinView, CreateView):
 
     def get_success_url(self):
         return reverse_lazy("course-list")
+
+
+class CourseTaskStatusView(LoginRequiredMixinView, View):
+    def get(self, request, pk, *args, **kwargs):
+        course = Course.objects.get(pk=pk)
+        return JsonResponse({"task_running": course.task_running})

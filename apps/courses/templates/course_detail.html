@@ -21,14 +21,51 @@
                 {% endif %}
             </span>
         </div>
+
+        <!-- Schedules Section -->
         <h2 class="text-lg font-bold text-slate-900 mb-2">Schedules</h2>
+        {% if course.schedule_set.exists %}
         <ul class="list-disc list-inside text-slate-700">
-            {% for schedule in course.get_active_schedules %}
-            <li>{{ schedule }}</li>
-            {% empty %}
-            <li>No active schedules available.</li>
+            {% for schedule in course.schedule_set.all %}
+            <li>
+                <strong>Day:</strong> {{ schedule.get_day_of_week_display }},
+                <strong>Time:</strong> {{ schedule.start_time|time:"H:i" }} - {{ schedule.end_time|time:"H:i" }},
+                <strong>Room:</strong> {{ schedule.room }},
+                <strong>Teacher:</strong> {{ schedule.teacher.name }}
+            </li>
             {% endfor %}
         </ul>
+        {% else %}
+        <p class="text-slate-700">No schedules available for this course.</p>
+        {% if course.is_task_running %}
+        <div class="mt-6">
+            <p class="text-blue-600">Mapping schedules... Please wait.</p>
+        </div>
+        <script>
+            function checkTaskStatus() {
+                fetch("{% url 'course-task-status' course.id %}")
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.task_running) {
+                            location.reload(); // Refresh the page when task is complete
+                        }
+                    });
+            }
+            setInterval(checkTaskStatus, 5000); // Poll every 5 seconds
+        </script>
+        {% else %}
+        <div class="mt-6">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="process">
+                <button type="submit" 
+                        class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-3 rounded text-sm">
+                    Map Schedule
+                </button>
+            </form>
+        </div>
+        {% endif %}
+        {% endif %}
     </div>
 
     <!-- Back Button -->

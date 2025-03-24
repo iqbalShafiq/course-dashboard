@@ -8,6 +8,7 @@ class Course(BaseModel):
     description = models.TextField(_("Description"), blank=True, null=True)
     capacity = models.PositiveIntegerField(_("Capacity"), default=10)
     is_active = models.BooleanField(_("Active Status"), default=True)
+    task_running = models.BooleanField(_("Task Running"), default=False)
 
     class Meta:
         verbose_name = _("Course")
@@ -24,3 +25,7 @@ class Course(BaseModel):
     def get_active_schedules(self):
         """Returns active schedules for this course"""
         return self.schedule_set.filter(is_active=True)
+
+    def is_task_running(self):
+        """Check if a schedule mapping task is running for this course."""
+        return self.task_running

@@ -1,3 +1,5 @@
+from django.shortcuts import redirect
+from django.views import View
 from django.views.generic import ListView, DetailView
 from .models import DayOfWeek, Schedule
 from core.views import LoginRequiredMixinView
@@ -16,3 +18,7 @@ class ScheduleDetailView(LoginRequiredMixinView, DetailView):
     model = Schedule
     template_name = "schedules/schedule_detail.html"
     context_object_name = "schedule"
+
+class DefaultView(View):
+    def get(self, request, *args, **kwargs):
+        return redirect('schedule-list')
