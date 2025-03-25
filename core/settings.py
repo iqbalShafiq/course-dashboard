@@ -45,6 +45,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://course-dashboard.iqbalsyafiq.space',
+    'http://course-dashboard.iqbalsyafiq.space',
+    'http://35.247.155.161:8000'
+]
+
 ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
