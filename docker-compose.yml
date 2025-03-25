@@ -42,9 +42,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      - PG_USER=${PG_USER}
-      - PG_PASSWORD=${PG_PASSWORD}
-      - PG_DATABASE=${PG_DATABASE}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DATABASE=${PG_DATABASE}
 
   redis:
     image: redis:alpine
