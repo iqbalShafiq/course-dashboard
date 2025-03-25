@@ -46,10 +46,21 @@ MIDDLEWARE = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://course-dashboard.iqbalsyafiq.space',
-    'http://course-dashboard.iqbalsyafiq.space',
-    'http://35.247.155.161:8000'
+    "https://course-dashboard.iqbalsyafiq.space",
+    "http://course-dashboard.iqbalsyafiq.space",
+    "http://35.247.155.161:8000",
 ]
+
+HUEY = {
+    "huey_class": "huey.RedisHuey",
+    "name": "course_dashboard",
+    "url": os.environ.get("REDIS_URL", "redis://redis:6379/0"),
+    "immediate": False,
+    "consumer": {
+        "workers": 2,
+        "worker_type": "thread",
+    },
+}
 
 ROOT_URLCONF = "core.urls"
 
