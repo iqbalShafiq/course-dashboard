@@ -17,7 +17,7 @@ services:
       - DEBUG=${DEBUG:-False}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - SECRET_KEY=${SECRET_KEY}
-    command: gunicorn --workers=3 --bind 0.0.0.0:8000 config.wsgi:application
+    command: gunicorn --workers=3 --bind 0.0.0.0:8000 core.wsgi:application
 
   huey_worker:
     build: .
