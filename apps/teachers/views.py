@@ -27,5 +27,10 @@ class TeacherEditView(LoginRequiredMixinView, UpdateView):
     form_class = TeacherEditForm
     template_name = "teacher_editor.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user_settings"] = TeacherSetting.objects.filter(actor=self.request.user).first()
+        return context
+
     def get_success_url(self):
         return reverse_lazy("teacher-list")
