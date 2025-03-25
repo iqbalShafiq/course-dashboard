@@ -16,7 +16,7 @@ class ScheduleListView(LoginRequiredMixinView, ListView):
 
 class ScheduleDetailView(LoginRequiredMixinView, DetailView):
     model = Schedule
-    template_name = "schedules/schedule_detail.html"
+    template_name = "schedule_detail.html"
     context_object_name = "schedule"
 
 class DefaultView(View):

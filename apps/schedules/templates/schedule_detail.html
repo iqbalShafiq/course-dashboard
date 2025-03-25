@@ -1,0 +1,53 @@
+{% extends "dashboard_base.html" %}
+
+{% block dashboard_content %}
+<div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold mb-4 text-slate-900">Schedule Details</h1>
+
+    <!-- Schedule Details -->
+    <div class="bg-gradient-to-r from-blue-100 to-blue-50 border border-slate-900 rounded shadow-md p-6">
+        <h2 class="text-lg font-bold text-slate-900 mb-4">{{ schedule.course.name }}</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <p class="text-slate-700">
+                    <strong>Teacher:</strong> {{ schedule.teacher.name }}
+                </p>
+                <p class="text-slate-700">
+                    <strong>Day:</strong> {{ schedule.get_day_of_week_display }}
+                </p>
+                <p class="text-slate-700">
+                    <strong>Time:</strong> {{ schedule.start_time|time:"H:i" }} - {{ schedule.end_time|time:"H:i" }}
+                </p>
+            </div>
+            <div>
+                <p class="text-slate-700">
+                    <strong>Room:</strong> {{ schedule.room }}
+                </p>
+                <p class="text-slate-700">
+                    <strong>Status:</strong> 
+                    {% if schedule.is_active %}
+                    <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                        Active
+                    </span>
+                    {% else %}
+                    <span class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                        Inactive
+                    </span>
+                    {% endif %}
+                </p>
+                <p class="text-slate-700">
+                    <strong>Duration:</strong> {{ schedule.duration_minutes }} minutes
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="mt-6">
+        <a href="{% url 'schedule-list' %}" 
+           class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-3 rounded text-sm">
+            Back to Schedules
+        </a>
+    </div>
+</div>
+{% endblock dashboard_content %}
