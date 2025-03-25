@@ -1,5 +1,5 @@
 {% extends "dashboard_base.html" %}
-
+{% block title %}Course Dashboard - Schedules{% endblock title %}
 {% block dashboard_content %}
 <div class="container mx-auto px-4" x-data="scheduleList()">
     <h1 class="text-2xl font-bold mb-4 text-slate-900">Schedules</h1>
@@ -57,7 +57,6 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 <script>
     function scheduleList() {
         return {

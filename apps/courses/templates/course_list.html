@@ -1,5 +1,5 @@
 {% extends "dashboard_base.html" %}
-
+{% block title %}Course Dashboard - Courses{% endblock title %}
 {% block dashboard_content %}
 <div class="container mx-auto px-4" x-data="courseGrid()">
     <h1 class="text-2xl font-bold mb-4 text-slate-900">Courses</h1>
@@ -41,7 +41,6 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 <script>
     function courseGrid() {
         return {
