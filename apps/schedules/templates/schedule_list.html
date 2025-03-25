@@ -25,6 +25,7 @@
 
     <!-- Schedules Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% if schedules %}
         {% for schedule in schedules %}
         <div class="bg-white border border-slate-900 rounded shadow-md p-4 hover:shadow-lg transition-shadow flex flex-col justify-between"
              x-show="isVisible('{{ schedule.day_of_week }}', '{{ schedule.is_active|yesno:'active,inactive' }}')">
@@ -54,6 +55,11 @@
             </div>
         </div>
         {% endfor %}
+        {% else %}
+        <div class="col-span-full text-center text-slate-500">
+            No schedules found.
+        </div>
+        {% endif %}
     </div>
 </div>
 

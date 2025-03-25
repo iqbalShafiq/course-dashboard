@@ -12,6 +12,7 @@
 
     <!-- Courses Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% if courses %}
         {% for course in courses %}
         <div class="bg-white border border-slate-900 rounded shadow-md p-4 hover:shadow-lg transition-shadow flex flex-col justify-between"
              x-show="isVisible('{{ course.name }}', '{{ course.description }}')">
@@ -38,6 +39,11 @@
             </div>
         </div>
         {% endfor %}
+        {% else %}
+        <div class="col-span-full text-center text-slate-500">
+            No courses found.
+        </div>
+        {% endif %}
     </div>
 </div>
 

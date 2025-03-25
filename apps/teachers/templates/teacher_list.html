@@ -30,6 +30,7 @@
                 </tr>
             </thead>
             <tbody>
+                {% if teachers %}
                 {% for teacher in teachers %}
                 <tr class="hover:bg-slate-100"
                     x-show="isVisible('{{ teacher.name }}', '{{ teacher.email }}', '{{ teacher.is_active|yesno:'Active,Inactive' }}')">
@@ -47,6 +48,14 @@
                     {% endif %}
                 </tr>
                 {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="{% if user_settings and user_settings.role == 'manager' %}5{% else %}4{% endif %}"
+                        class="border border-slate-900 px-4 py-2 text-center text-slate-500">
+                        No teachers found.
+                    </td>
+                </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>
