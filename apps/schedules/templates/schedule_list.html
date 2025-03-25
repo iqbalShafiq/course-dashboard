@@ -55,11 +55,6 @@
             </div>
         </div>
         {% endfor %}
-        <template x-if="!schedules.some(schedule => isVisible(schedule.day_of_week, schedule.is_active ? 'active' : 'inactive'))">
-            <div class="col-span-full text-center text-slate-500">
-                No schedules match the filter criteria.
-            </div>
-        </template>
         {% else %}
         <div class="col-span-full text-center text-slate-500">
             No schedules found.
