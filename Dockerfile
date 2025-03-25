@@ -25,7 +25,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Collect static files
-RUN python manage.py collectstatic --noinput
+RUN python manage.py collectstatic
 
 # Django will serve the compiled CSS
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
