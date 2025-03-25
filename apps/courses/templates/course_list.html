@@ -39,6 +39,11 @@
             </div>
         </div>
         {% endfor %}
+        <template x-if="!courses.some(course => isVisible(course.name, course.description))">
+            <div class="col-span-full text-center text-slate-500">
+                No courses match the filter criteria.
+            </div>
+        </template>
         {% else %}
         <div class="col-span-full text-center text-slate-500">
             No courses found.
