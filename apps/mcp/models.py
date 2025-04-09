@@ -32,3 +32,30 @@ class Conversation(BaseModel):
         self.status = "awaiting_input"
         self.response = question
         self.save()
+
+
+class Analysis(BaseModel):
+    title = models.CharField(max_length=200)
+    description = models.TextField(null=True, blank=True)
+    query = models.TextField()
+    result = models.JSONField(null=True, blank=True)
+    visualization_type = models.CharField(
+        max_length=20,
+        choices=[
+            ("line", "Line Chart"),
+            ("bar", "Bar Chart"),
+            ("pie", "Pie Chart"),
+            ("table", "Table View"),
+            ("metric", "Metric Display"),
+        ],
+        default="table"
+    )
+    is_public = models.BooleanField(default=False)
+    last_updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name_plural = "Analyses"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.title

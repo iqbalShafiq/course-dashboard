@@ -1,6 +1,8 @@
 from django.http import JsonResponse
 from django.views import View
-from .models import Conversation
+from django.views.generic import ListView, DetailView
+from django.shortcuts import redirect
+from .models import Conversation, Analysis
 from .services import MCPService
 from huey.contrib.djhuey import task
 from core.views import LoginRequiredMixinView
@@ -10,6 +12,12 @@ def process_conversation(conversation_id):
     service = MCPService()
     print(f"Processing conversation with ID: {conversation_id}")
     return service.process_prompt(conversation_id)
+
+@task()
+def process_analysis(analysis_id):
+    service = MCPService()
+    print(f"Processing analysis with ID: {analysis_id}")
+    return service.process_analysis(analysis_id)
 
 class ConversationView(LoginRequiredMixinView, View):
     def post(self, request):
@@ -65,3 +73,35 @@ class ConversationStatusView(LoginRequiredMixinView, View):
             })
         except Conversation.DoesNotExist:
             return JsonResponse({"error": "Conversation not found"}, status=404)
+
+class AnalysisListView(LoginRequiredMixinView, ListView):
+    model = Analysis
+    template_name = "analysis_list.html"
+    context_object_name = "analyses"
+
+class AnalysisDetailView(LoginRequiredMixinView, DetailView):
+    model = Analysis
+    template_name = "analysis_detail.html"
+    context_object_name = "analysis"
+
+class CreateAnalysisView(LoginRequiredMixinView, View):
+    def post(self, request):
+        prompt = request.POST.get('prompt')
+        visualization = request.POST.get('visualization_type', 'table')
+        
+        # Create analysis object
+        analysis = Analysis.objects.create(
+            title=f"Analysis: {prompt[:50]}...",
+            query=prompt,
+            visualization_type=visualization,
+            actor=request.user
+        )
+        
+        # Process asynchronously
+        process_analysis(analysis.id)
+        
+        return JsonResponse({"id": analysis.id, "status": "processing"})
+
+    def get(self, request):
+        # Handle GET request by redirecting to analysis list
+        return redirect('analysis-list')

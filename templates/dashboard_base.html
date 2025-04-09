@@ -13,7 +13,8 @@
         <div x-data="{ 
             openCourse: {% if request.resolver_match.url_name == 'course-list' or request.resolver_match.url_name == 'create-courses' %}true{% else %}false{% endif %}, 
             openTeacher: {% if request.resolver_match.url_name == 'teacher-list' %}true{% else %}false{% endif %}, 
-            openSchedule: {% if request.resolver_match.url_name == 'schedule-list' or request.resolver_match.url_name == 'manage-schedule' %}true{% else %}false{% endif %} 
+            openSchedule: {% if request.resolver_match.url_name == 'schedule-list' or request.resolver_match.url_name == 'manage-schedule' %}true{% else %}false{% endif %},
+            openAnalytics: {% if request.resolver_match.url_name == 'analysis-list' or request.resolver_match.url_name == 'create-analysis' %}true{% else %}false{% endif %}
         }">
             <!-- Courses Dropdown -->
             <div>
@@ -71,10 +72,26 @@
                 </ul>
             </div>
 
+            <!-- Analytics Dropdown -->
+            <div>
+                <button @click="openAnalytics = !openAnalytics"
+                    class="w-full text-left p-2 font-semibold hover:bg-slate-800 rounded cursor-pointer">
+                    Analytics
+                </button>
+                <ul x-show="openAnalytics" class="ml-4 space-y-1">
+                    <li>
+                        <a href="{% url 'analysis-list' %}"
+                            class="block p-2 {% if request.resolver_match.url_name == 'analysis-list' %}font-bold{% else %}hover:font-bold{% endif %}">
+                            List
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             <!-- Logout -->
             <div class="mt-4">
                 <a href="{% url 'logout' %}"
-                    class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded w-full block text-left">
+                    class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded w-full block text-left cursor-pointer">
                     Logout
                 </a>
             </div>
@@ -110,11 +127,11 @@
                 x-transition:leave-end="opacity-0 transform translate-y-4"
                 class="fixed inset-0 mx-auto flex items-start justify-end p-4 bg-black/10 backdrop-blur-sm z-40">
                 <div @click.stop
-                    class="w-[480px] h-[90vh] bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-slate-900/10 flex flex-col overflow-hidden mr-20">
+                    class="w-[480px] h-[90vh] bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex flex-col overflow-hidden mr-20">
                     <!-- Header -->
                     <div class="px-6 py-4 border-b bg-slate-900 text-white flex justify-between items-center">
                         <h3 class="text-lg font-semibold">AI Assistant</h3>
-                        <button @click="isOpen = false" class="text-gray-400 hover:text-white">
+                        <button @click="isOpen = false" class="cursor-pointer text-gray-400 hover:text-white">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>

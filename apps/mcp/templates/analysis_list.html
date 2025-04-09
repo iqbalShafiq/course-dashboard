@@ -1,0 +1,143 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Analytics Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div class="container mx-auto px-4" x-data="analysisApp()">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-slate-900">Analytics Dashboard</h1>
+        <button @click="showAnalysisModal = true" 
+                class="bg-slate-900 text-white px-4 py-2 rounded hover:bg-slate-800 cursor-pointer">
+            New Analysis
+        </button>
+    </div>
+
+    <!-- Analysis Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for analysis in analyses %}
+        <div class="bg-white p-6 rounded-lg shadow-md border border-slate-900/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
+            <h3 class="font-semibold text-lg mb-2">{{ analysis.title }}</h3>
+            
+            {% if analysis.result and analysis.result.raw_data %}
+            <div class="overflow-x-auto mb-4">
+                <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            {% for key in analysis.result.raw_data.0.keys %}
+                            <th class="px-2 py-2 text-left text-xs font-medium text-slate-500 uppercase">{{ key }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-slate-200">
+                        {% for row in analysis.result.raw_data|slice:":3" %}
+                        <tr>
+                            {% for value in row.values %}
+                            <td class="px-2 py-2 text-sm text-slate-900">{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-slate-600 mb-4 line-clamp-2">{{ analysis.description|default:"Processing analysis..." }}</p>
+            {% endif %}
+
+            <div class="flex justify-between items-center mt-2">
+                <span class="text-sm text-slate-500">{{ analysis.last_updated|date:"M d, Y" }}</span>
+                <a href="{% url 'analysis-detail' analysis.id %}" 
+                   class="text-slate-900 hover:text-slate-700">View Results →</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center text-slate-500 py-8">
+            No analyses yet. Create one to get started.
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- New Analysis Modal -->
+    <div x-show="showAnalysisModal" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center"
+         @click.self="showAnalysisModal = false">
+        <div x-show="showAnalysisModal"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-90"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-90"
+             class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 class="text-xl font-bold mb-4">Create New Analysis</h2>
+            <form @submit.prevent="createAnalysis">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Analysis Query</label>
+                    <textarea x-model="query" 
+                              class="w-full border border-slate-900 rounded p-2" 
+                              rows="4"
+                              placeholder="Example: Show me the course enrollment trends over the last 6 months"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Visualization Type</label>
+                    <select x-model="visualizationType" class="w-full border border-slate-900 rounded p-2">
+                        <option value="line">Line Chart</option>
+                        <option value="bar">Bar Chart</option>
+                        <option value="pie">Pie Chart</option>
+                        <option value="table">Table View</option>
+                        <option value="metric">Metric Display</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" 
+                            @click="showAnalysisModal = false"
+                            class="px-4 py-2 text-slate-700 hover:text-slate-900 cursor-pointer">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="bg-slate-900 text-white px-4 py-2 rounded hover:bg-slate-800 cursor-pointer">
+                        Create Analysis
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function analysisApp() {
+    return {
+        showAnalysisModal: false,
+        query: '',
+        visualizationType: 'table',
+
+        async createAnalysis() {
+            const formData = new FormData();
+            formData.append('prompt', this.query);
+            formData.append('visualization_type', this.visualizationType);
+
+            try {
+                const response = await fetch("{% url 'create-analysis' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (data.id) {
+                    window.location.href = `/analysis/${data.id}/`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    }
+}
+</script>
+{% endblock %}
