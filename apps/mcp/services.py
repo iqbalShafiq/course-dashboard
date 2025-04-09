@@ -27,6 +27,8 @@ class MCPService:
             return Teacher.objects.create(**data)
         elif action_type == "create_schedule":
             return Schedule.objects.create(**data)
+        elif action_type == "request_info":
+            return {"status": "awaiting_input", "question": data["question"]}
         else:
             raise ValueError(f"Unknown action type: {action_type}")
 
@@ -36,29 +38,51 @@ class MCPService:
         conversation.save()
 
         try:
+            messages = [
+                {
+                    "role": "system",
+                    "content": """You are an AI assistant that processes natural language commands for a course dashboard system. 
+                    If you need more information to process a request, respond with a JSON like:
+                    {"action": "request_info", "data": {"question": "What specific information do you need?"}}
+                    
+                    For other actions, respond with JSON like:
+                    {"action": "create_course", "data": {"name": "Python 101", "description": "Intro to Python"}}
+                    {"action": "update_course", "data": {"id": "123", "name": "Updated Course"}}
+                    {"action": "create_teacher", "data": {"name": "John Doe", "email": "john@example.com"}}"""
+                }
+            ]
+
+            # Add context from parent conversation if it exists
+            if conversation.parent:
+                messages.append({"role": "user", "content": conversation.parent.prompt})
+                messages.append({"role": "assistant", "content": conversation.parent.response})
+
+            # Add current conversation
+            messages.append({"role": "user", "content": conversation.prompt})
+
+            # Add stored context if available
+            if conversation.context:
+                for ctx in conversation.context:
+                    messages.append({"role": "user", "content": f"Additional context: {ctx}"})
+
             response = self.client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": """You are an AI assistant that processes natural language commands for a course dashboard system. 
-                     Parse the user's intent and respond with structured actions in JSON format. Example actions:
-                     {"action": "create_course", "data": {"name": "Python 101", "description": "Intro to Python"}}
-                     {"action": "update_course", "data": {"id": "123", "name": "Updated Course"}}
-                     {"action": "create_teacher", "data": {"name": "John Doe", "email": "john@example.com"}}
-                     Always respond with valid JSON that includes 'action' and 'data' fields.""",
-                    },
-                    {"role": "user", "content": conversation.prompt},
-                ],
+                model="gpt-4",
+                messages=messages,
             )
 
             ai_response = response.choices[0].message.content
             print(f"AI Response: {ai_response}")
+
             try:
                 action_data = json.loads(ai_response)
                 result = self.execute_action(action_data)
-                conversation.response = f"Success: {str(result)}"
-                conversation.status = "completed"
+
+                if isinstance(result, dict) and result.get("status") == "awaiting_input":
+                    conversation.request_information(result["question"])
+                else:
+                    conversation.response = f"Success: {str(result)}"
+                    conversation.status = "completed"
+
             except json.JSONDecodeError:
                 conversation.error = "Invalid JSON response from AI"
                 conversation.status = "failed"
