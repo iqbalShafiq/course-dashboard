@@ -19,6 +19,10 @@ DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 
+# OpenAI Configuration
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+
+
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -31,6 +35,7 @@ INSTALLED_APPS = [
     "apps.courses",
     "apps.schedules",
     "apps.teachers",
+    "apps.mcp",
     "huey.contrib.djhuey",
 ]
 
@@ -49,12 +54,14 @@ CSRF_TRUSTED_ORIGINS = [
     "https://course-dashboard.iqbalsyafiq.space",
     "http://course-dashboard.iqbalsyafiq.space",
     "http://35.247.155.161:8000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000"
 ]
 
 HUEY = {
     "huey_class": "huey.RedisHuey",
     "name": "course_dashboard",
-    "url": os.environ.get("REDIS_URL", "redis://redis:6379/0"),
+    "url": os.environ.get("REDIS_URL", "redis://localhost:6379/0"),
     "immediate": False,
     "consumer": {
         "workers": 2,
@@ -133,7 +140,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "static"
+# STATIC_ROOT = BASE_DIR / "static"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
